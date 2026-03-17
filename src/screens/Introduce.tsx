@@ -283,102 +283,106 @@ export default function Introduce() {
 
           {/* ── Desktop preview ── */}
           {tab === 'desktop' && (
-            <div className="flex flex-col gap-2">
-              <ChecklistTitle />
-              {QUESTIONS.map((q, i) => (
-                <div key={i} className="overflow-hidden" style={{ borderRadius: '2px', border: '1px solid #E9EDF6' }}>
-                  <QuestionCard q={q} mobile={false} />
-                </div>
-              ))}
+            <div className="flex justify-center">
+              <div className="flex flex-col gap-2 w-full" style={{ maxWidth: '780px' }}>
+                <ChecklistTitle />
+                {QUESTIONS.map((q, i) => (
+                  <div key={i} className="overflow-hidden" style={{ borderRadius: '2px', border: '1px solid #E9EDF6' }}>
+                    <QuestionCard q={q} mobile={false} />
+                  </div>
+                ))}
+              </div>
             </div>
           )}
 
           {/* ── Mobile preview ── */}
           {tab === 'mobile' && (
-            <div className="flex gap-4 items-start">
-              {/* QR Code card */}
-              <div
-                className="flex-shrink-0 bg-white rounded-xl p-3 flex flex-col gap-3 items-center"
-                style={{
-                  width: '148px',
-                  boxShadow: '0px 4px 12px rgba(0,0,0,0.08), 0px 2px 2px rgba(0,0,0,0.04)',
-                }}
-              >
-                <p className="text-[13px] text-[#3F495A] leading-5 self-start">
-                  You can preview this checklist on your phone by scanning this QR code.
-                </p>
-                {/* QR code SVG */}
-                <div className="border rounded-lg overflow-hidden" style={{ borderColor: '#DBE0EB' }}>
-                  <svg viewBox="0 0 120 120" width="120" height="120">
-                    <rect width="120" height="120" fill="white"/>
-                    {/* Top-left finder */}
-                    <rect x="8" y="8" width="30" height="30" rx="2" fill="#1F2533"/>
-                    <rect x="12" y="12" width="22" height="22" rx="1" fill="white"/>
-                    <rect x="16" y="16" width="14" height="14" rx="1" fill="#1F2533"/>
-                    {/* Top-right finder */}
-                    <rect x="82" y="8" width="30" height="30" rx="2" fill="#1F2533"/>
-                    <rect x="86" y="12" width="22" height="22" rx="1" fill="white"/>
-                    <rect x="90" y="16" width="14" height="14" rx="1" fill="#1F2533"/>
-                    {/* Bottom-left finder */}
-                    <rect x="8" y="82" width="30" height="30" rx="2" fill="#1F2533"/>
-                    <rect x="12" y="86" width="22" height="22" rx="1" fill="white"/>
-                    <rect x="16" y="90" width="14" height="14" rx="1" fill="#1F2533"/>
-                    {/* Data modules */}
-                    <rect x="44" y="8" width="6" height="6" fill="#1F2533"/>
-                    <rect x="54" y="8" width="6" height="6" fill="#1F2533"/>
-                    <rect x="44" y="18" width="6" height="6" fill="#1F2533"/>
-                    <rect x="64" y="8" width="6" height="6" fill="#1F2533"/>
-                    <rect x="74" y="14" width="6" height="6" fill="#1F2533"/>
-                    <rect x="8" y="44" width="6" height="6" fill="#1F2533"/>
-                    <rect x="18" y="44" width="6" height="6" fill="#1F2533"/>
-                    <rect x="8" y="54" width="6" height="6" fill="#1F2533"/>
-                    <rect x="8" y="64" width="6" height="6" fill="#1F2533"/>
-                    <rect x="18" y="64" width="6" height="6" fill="#1F2533"/>
-                    <rect x="106" y="44" width="6" height="6" fill="#1F2533"/>
-                    <rect x="96" y="54" width="6" height="6" fill="#1F2533"/>
-                    <rect x="106" y="54" width="6" height="6" fill="#1F2533"/>
-                    <rect x="106" y="64" width="6" height="6" fill="#1F2533"/>
-                    <rect x="44" y="106" width="6" height="6" fill="#1F2533"/>
-                    <rect x="54" y="96" width="6" height="6" fill="#1F2533"/>
-                    <rect x="64" y="106" width="6" height="6" fill="#1F2533"/>
-                    <rect x="74" y="96" width="6" height="6" fill="#1F2533"/>
-                    <rect x="44" y="44" width="6" height="6" fill="#1F2533"/>
-                    <rect x="54" y="54" width="6" height="6" fill="#1F2533"/>
-                    <rect x="64" y="44" width="6" height="6" fill="#1F2533"/>
-                    <rect x="74" y="54" width="6" height="6" fill="#1F2533"/>
-                    <rect x="44" y="64" width="6" height="6" fill="#1F2533"/>
-                    <rect x="64" y="64" width="6" height="6" fill="#1F2533"/>
-                    <rect x="54" y="74" width="6" height="6" fill="#1F2533"/>
-                    <rect x="74" y="74" width="6" height="6" fill="#1F2533"/>
-                    <rect x="84" y="44" width="6" height="6" fill="#1F2533"/>
-                    <rect x="84" y="64" width="6" height="6" fill="#1F2533"/>
-                    <rect x="84" y="74" width="6" height="6" fill="#1F2533"/>
-                    <rect x="84" y="84" width="6" height="6" fill="#1F2533"/>
-                    <rect x="94" y="84" width="6" height="6" fill="#1F2533"/>
-                    <rect x="44" y="84" width="6" height="6" fill="#1F2533"/>
-                  </svg>
+            <div className="flex justify-center">
+              <div className="flex gap-4 items-start">
+                {/* QR Code card */}
+                <div
+                  className="flex-shrink-0 bg-white rounded-xl p-3 flex flex-col gap-3 items-center"
+                  style={{
+                    width: '148px',
+                    boxShadow: '0px 4px 12px rgba(0,0,0,0.08), 0px 2px 2px rgba(0,0,0,0.04)',
+                  }}
+                >
+                  <p className="text-[13px] text-[#3F495A] leading-5 self-start">
+                    You can preview this checklist on your phone by scanning this QR code.
+                  </p>
+                  {/* QR code SVG */}
+                  <div className="border rounded-lg overflow-hidden" style={{ borderColor: '#DBE0EB' }}>
+                    <svg viewBox="0 0 120 120" width="120" height="120">
+                      <rect width="120" height="120" fill="white"/>
+                      {/* Top-left finder */}
+                      <rect x="8" y="8" width="30" height="30" rx="2" fill="#1F2533"/>
+                      <rect x="12" y="12" width="22" height="22" rx="1" fill="white"/>
+                      <rect x="16" y="16" width="14" height="14" rx="1" fill="#1F2533"/>
+                      {/* Top-right finder */}
+                      <rect x="82" y="8" width="30" height="30" rx="2" fill="#1F2533"/>
+                      <rect x="86" y="12" width="22" height="22" rx="1" fill="white"/>
+                      <rect x="90" y="16" width="14" height="14" rx="1" fill="#1F2533"/>
+                      {/* Bottom-left finder */}
+                      <rect x="8" y="82" width="30" height="30" rx="2" fill="#1F2533"/>
+                      <rect x="12" y="86" width="22" height="22" rx="1" fill="white"/>
+                      <rect x="16" y="90" width="14" height="14" rx="1" fill="#1F2533"/>
+                      {/* Data modules */}
+                      <rect x="44" y="8" width="6" height="6" fill="#1F2533"/>
+                      <rect x="54" y="8" width="6" height="6" fill="#1F2533"/>
+                      <rect x="44" y="18" width="6" height="6" fill="#1F2533"/>
+                      <rect x="64" y="8" width="6" height="6" fill="#1F2533"/>
+                      <rect x="74" y="14" width="6" height="6" fill="#1F2533"/>
+                      <rect x="8" y="44" width="6" height="6" fill="#1F2533"/>
+                      <rect x="18" y="44" width="6" height="6" fill="#1F2533"/>
+                      <rect x="8" y="54" width="6" height="6" fill="#1F2533"/>
+                      <rect x="8" y="64" width="6" height="6" fill="#1F2533"/>
+                      <rect x="18" y="64" width="6" height="6" fill="#1F2533"/>
+                      <rect x="106" y="44" width="6" height="6" fill="#1F2533"/>
+                      <rect x="96" y="54" width="6" height="6" fill="#1F2533"/>
+                      <rect x="106" y="54" width="6" height="6" fill="#1F2533"/>
+                      <rect x="106" y="64" width="6" height="6" fill="#1F2533"/>
+                      <rect x="44" y="106" width="6" height="6" fill="#1F2533"/>
+                      <rect x="54" y="96" width="6" height="6" fill="#1F2533"/>
+                      <rect x="64" y="106" width="6" height="6" fill="#1F2533"/>
+                      <rect x="74" y="96" width="6" height="6" fill="#1F2533"/>
+                      <rect x="44" y="44" width="6" height="6" fill="#1F2533"/>
+                      <rect x="54" y="54" width="6" height="6" fill="#1F2533"/>
+                      <rect x="64" y="44" width="6" height="6" fill="#1F2533"/>
+                      <rect x="74" y="54" width="6" height="6" fill="#1F2533"/>
+                      <rect x="44" y="64" width="6" height="6" fill="#1F2533"/>
+                      <rect x="64" y="64" width="6" height="6" fill="#1F2533"/>
+                      <rect x="54" y="74" width="6" height="6" fill="#1F2533"/>
+                      <rect x="74" y="74" width="6" height="6" fill="#1F2533"/>
+                      <rect x="84" y="44" width="6" height="6" fill="#1F2533"/>
+                      <rect x="84" y="64" width="6" height="6" fill="#1F2533"/>
+                      <rect x="84" y="74" width="6" height="6" fill="#1F2533"/>
+                      <rect x="84" y="84" width="6" height="6" fill="#1F2533"/>
+                      <rect x="94" y="84" width="6" height="6" fill="#1F2533"/>
+                      <rect x="44" y="84" width="6" height="6" fill="#1F2533"/>
+                    </svg>
+                  </div>
                 </div>
-              </div>
 
-              {/* Phone frame */}
-              <div
-                className="flex-shrink-0 overflow-hidden bg-white"
-                style={{
-                  width: '375px',
-                  height: '720px',
-                  borderRadius: '24px',
-                  border: '1px solid #DBE0EB',
-                  backgroundColor: '#E9EDF6',
-                }}
-              >
-                <div className="h-full overflow-y-auto scrollbar-hide">
-                  <div className="flex flex-col gap-2 p-2">
-                    <ChecklistTitle />
-                    {QUESTIONS.map((q, i) => (
-                      <div key={i} className="overflow-hidden bg-white" style={{ borderRadius: '2px' }}>
-                        <QuestionCard q={q} mobile={true} />
-                      </div>
-                    ))}
+                {/* Phone frame */}
+                <div
+                  className="flex-shrink-0 overflow-hidden bg-white"
+                  style={{
+                    width: '375px',
+                    height: '720px',
+                    borderRadius: '24px',
+                    border: '1px solid #DBE0EB',
+                    backgroundColor: '#E9EDF6',
+                  }}
+                >
+                  <div className="h-full overflow-y-auto scrollbar-hide">
+                    <div className="flex flex-col gap-2 p-2">
+                      <ChecklistTitle />
+                      {QUESTIONS.map((q, i) => (
+                        <div key={i} className="overflow-hidden bg-white" style={{ borderRadius: '2px' }}>
+                          <QuestionCard q={q} mobile={true} />
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
