@@ -1,6 +1,8 @@
 import { useNavigate } from 'react-router-dom'
 import { ChevronDown, Globe, LogIn } from 'lucide-react'
 
+const HERO_IMAGE = 'https://images.ctfassets.net/ueprkma36dz5/6u0yxiK1azfv3hhASOTvmX/8115c91b9cc10869fd5e3db4b8e4286a/hero-image-test-v2.png'
+
 export default function Website() {
   const navigate = useNavigate()
 
@@ -77,7 +79,7 @@ export default function Website() {
         {/* Product screenshot */}
         <div className="w-full max-w-6xl mx-auto px-8 pb-0 relative">
           <img
-            src="/assets/hero-product.png"
+            src={HERO_IMAGE}
             alt="SafetyCulture platform"
             className="w-full block"
             style={{ maxWidth: '956px', margin: '0 auto', display: 'block' }}
