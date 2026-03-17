@@ -89,7 +89,7 @@ function Tag({ label, selected }: { label: string; selected: boolean }) {
     <span
       className="inline-flex items-center px-3 py-1 rounded-lg text-[14px] font-medium border mr-2 flex-shrink-0 whitespace-nowrap"
       style={selected
-        ? { borderColor: '#675DF4', color: '#1F2533', backgroundColor: 'white' }
+        ? { borderColor: '#675DF4', color: '#675DF4', backgroundColor: 'white' }
         : { borderColor: '#BFC6D4', color: '#545F70', backgroundColor: 'white' }}
     >
       {label}
@@ -244,8 +244,8 @@ export default function Plan() {
             )
           })}
 
-          {/* Thinking block */}
-          {shownThinking.length > 0 && (
+          {/* Thinking block — hidden once review is shown */}
+          {shownThinking.length > 0 && !showReview && (
             <div className="animate-fadeIn border rounded-xl overflow-hidden" style={{ borderColor: '#DBE0EB' }}>
               {THINKING_STEPS.map((step, i) => {
                 if (!shownThinking.includes(i)) return null
