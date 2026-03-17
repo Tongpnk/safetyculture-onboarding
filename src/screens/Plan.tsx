@@ -4,21 +4,25 @@ import { Paperclip, Mic, ChevronDown } from 'lucide-react'
 
 // ─── Background ──────────────────────────────────────────────────────────────
 
-const BG_ELEMENTS = [
-  { label: 'Equipment performance', isTitle: true,
-    style: { left: '22.9%', top: '11.2%', width: '54.2%' }, delay: '0s', dur: '30s' },
-  { q: 'Is the equipment operating without unusual noise or vibration?', isTitle: false,
-    style: { left: '-4.4%', top: '34.7%', width: '54.2%' }, delay: '-8s', dur: '26s' },
-  { q: 'Are all safety guards and protective covers properly installed?', isTitle: false,
-    style: { left: '61%', top: '28.4%', width: '54.2%' }, delay: '-14s', dur: '34s' },
-  { q: 'Are there any visible signs of wear, leaks, or damage on equipment?', isTitle: false,
-    style: { left: '-9.6%', top: '67.6%', width: '54.2%' }, delay: '-5s', dur: '28s' },
+// Checklist questions that appear one-by-one as the AI conversation progresses
+const BG_QUESTIONS = [
+  'Is the equipment operating without unusual noise or vibration?',
+  'Are all safety guards and protective covers properly installed?',
+  'Are there any visible signs of wear, leaks, or damage on equipment?',
+  'Are emergency stop buttons accessible and functioning correctly?',
+  'Is routine maintenance up to date for all equipment?',
 ]
 
-function BgQuestion({ q, style, delay, dur }: { q: string; style: React.CSSProperties; delay: string; dur: string }) {
+// Each bg card appears after this ITEMS index enters shownItems
+const BG_CARD_TRIGGERS = [2, 4, 6, 8, 10]
+
+function BgCard({ q, top }: { q: string; top: string }) {
   return (
-    <div className="absolute bg-element" style={{ ...style, animationDelay: delay, animationDuration: dur }}>
-      <div className="bg-white rounded-xl px-5 py-4" style={{ filter: 'blur(8px)', opacity: 0.55 }}>
+    <div
+      className="absolute animate-fadeIn"
+      style={{ left: '22.9%', top, width: '54.2%' }}
+    >
+      <div className="bg-white rounded-xl px-5 py-4" style={{ filter: 'blur(8px)', opacity: 0.5 }}>
         <div className="h-4 w-3/4 bg-gray-400 rounded mb-1" />
         <p className="text-[15px] text-gray-700 font-medium mb-4 leading-snug">{q}</p>
         <div className="flex gap-3">
@@ -26,18 +30,11 @@ function BgQuestion({ q, style, delay, dur }: { q: string; style: React.CSSPrope
             <div key={opt} className="flex-1 py-2 text-[13px] text-center rounded-lg border border-gray-300 text-gray-600 bg-white">{opt}</div>
           ))}
         </div>
-      </div>
-    </div>
-  )
-}
-
-function BgTitle({ label, style, delay, dur }: { label: string; style: React.CSSProperties; delay: string; dur: string }) {
-  return (
-    <div className="absolute bg-element" style={{ ...style, animationDelay: delay, animationDuration: dur }}>
-      <div style={{ filter: 'blur(8px)', opacity: 0.45 }}>
-        <p className="text-[26px] font-bold text-white mb-2">{label}</p>
-        <div className="h-3 w-full bg-white/40 rounded mb-1.5" />
-        <div className="h-3 w-5/6 bg-white/30 rounded" />
+        <div className="flex gap-4 mt-3">
+          {['Add note', 'Attach media', 'Create action'].map(a => (
+            <div key={a} className="text-[11px] text-gray-400">{a}</div>
+          ))}
+        </div>
       </div>
     </div>
   )
@@ -177,16 +174,27 @@ export default function Plan() {
   return (
     <div className="relative min-h-screen flex items-center justify-center overflow-hidden" style={{ backgroundColor: '#9CA3AF' }}>
 
-      {/* Drifting background */}
-      <div className="absolute inset-0 pointer-events-none">
-        {BG_ELEMENTS.map((el, i) =>
-          el.isTitle
-            ? <BgTitle key={i} label={el.label!} style={el.style} delay={el.delay} dur={el.dur} />
-            : <BgQuestion key={i} q={el.q!} style={el.style} delay={el.delay} dur={el.dur} />
+      {/* Stacking background cards — appear one by one as answers are given */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {/* Title — always visible */}
+        <div
+          className="absolute animate-fadeIn"
+          style={{ left: '22.9%', top: '5%', width: '54.2%', filter: 'blur(8px)', opacity: 0.4 }}
+        >
+          <p className="text-[26px] font-bold text-white mb-2">Equipment performance</p>
+          <div className="h-3 w-full bg-white/40 rounded mb-1.5" />
+          <div className="h-3 w-5/6 bg-white/30 rounded" />
+        </div>
+
+        {/* Question cards — each triggered after corresponding answer */}
+        {BG_QUESTIONS.map((q, i) =>
+          shownItems.includes(BG_CARD_TRIGGERS[i])
+            ? <BgCard key={i} q={q} top={`${16 + i * 18}%`} />
+            : null
         )}
       </div>
 
-      {/* Overlay */}
+      {/* Grey overlay */}
       <div className="absolute inset-0 bg-gray-500/40" />
 
       {/* Skip for now */}
@@ -360,24 +368,11 @@ export default function Plan() {
       </div>
 
       <style>{`
-        @keyframes bgDrift {
-          0%   { transform: translate(0px, 0px); }
-          33%  { transform: translate(6px, -14px); }
-          66%  { transform: translate(-5px, -8px); }
-          100% { transform: translate(4px, -18px); }
-        }
-        .bg-element {
-          animation-name: bgDrift;
-          animation-timing-function: ease-in-out;
-          animation-iteration-count: infinite;
-          animation-direction: alternate;
-          will-change: transform;
-        }
         @keyframes fadeIn {
           from { opacity: 0; transform: translateY(6px); }
           to   { opacity: 1; transform: translateY(0); }
         }
-        .animate-fadeIn { animation: fadeIn 0.3s ease-out forwards; }
+        .animate-fadeIn { animation: fadeIn 0.4s ease-out forwards; }
         @keyframes shimmer {
           0%   { background-position: -200% center; }
           100% { background-position: 200% center; }
