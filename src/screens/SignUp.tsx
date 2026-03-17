@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Eye, EyeOff } from 'lucide-react'
 
-// White wordmark with coloured underline — matches Figma 32:21344
 function LogoWhite() {
   return (
     <svg width="260" height="39" viewBox="0 0 202 30" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -14,36 +13,54 @@ function LogoWhite() {
   )
 }
 
-const QUESTIONS = [
-  'Is the equipment operating without unusual noise or vibration?',
-  'Are all safety guards and protective covers properly installed?',
-  'Are emergency stop buttons accessible and functioning correctly?',
-  'Are there any visible signs of wear, leaks, or damage?',
-  'Has the equipment been serviced within the recommended period?',
-  'Are operator instructions clearly displayed near the machine?',
-  'Is the work area free from trip and slip hazards?',
+// Figma node positions (1440×900 frame):
+// Question 72:7362  → x=-64,  y=312, w=780, h=160
+// Question 72:7371  → x=879,  y=256, w=780, h=160
+// Question 72:7380  → x=-138, y=608, w=780, h=160
+// Title   72:7389  → x=330,  y=101, w=780, h=128
+const BG_ELEMENTS = [
+  { label: 'Equipment performance', isTitle: true,
+    style: { left: '22.9%', top: '11.2%', width: '54.2%' },
+    delay: '0s', dur: '30s' },
+  { q: 'Is the equipment operating without unusual noise or vibration?', isTitle: false,
+    style: { left: '-4.4%', top: '34.7%', width: '54.2%' },
+    delay: '-8s', dur: '26s' },
+  { q: 'Are all safety guards and protective covers properly installed?', isTitle: false,
+    style: { left: '61%',  top: '28.4%', width: '54.2%' },
+    delay: '-14s', dur: '34s' },
+  { q: 'Are there any visible signs of wear, leaks, or damage on equipment?', isTitle: false,
+    style: { left: '-9.6%', top: '67.6%', width: '54.2%' },
+    delay: '-5s', dur: '28s' },
 ]
 
-const CARDS = [
-  { q: QUESTIONS[0], top: '8%',  left: '-2%',  w: 260, delay: '0s',   dur: '22s', rotate: '-4deg' },
-  { q: QUESTIONS[1], top: '5%',  left: '58%',  w: 280, delay: '-6s',  dur: '28s', rotate: '3deg'  },
-  { q: QUESTIONS[2], top: '30%', left: '72%',  w: 250, delay: '-12s', dur: '24s', rotate: '-2deg' },
-  { q: QUESTIONS[3], top: '62%', left: '65%',  w: 270, delay: '-3s',  dur: '30s', rotate: '5deg'  },
-  { q: QUESTIONS[4], top: '70%', left: '-4%',  w: 255, delay: '-9s',  dur: '26s', rotate: '-6deg' },
-  { q: QUESTIONS[5], top: '42%', left: '-6%',  w: 240, delay: '-15s', dur: '20s', rotate: '2deg'  },
-  { q: QUESTIONS[6], top: '85%', left: '30%',  w: 265, delay: '-7s',  dur: '32s', rotate: '-3deg' },
-]
-
-function DriftingCard({ q, top, left, w, delay, dur, rotate }: { q: string; top: string; left: string; w: number; delay: string; dur: string; rotate: string }) {
+function BgQuestion({ q, style, delay, dur }: { q: string; style: React.CSSProperties; delay: string; dur: string }) {
   return (
-    <div className="absolute drift-card" style={{ top, left, width: w, animationDelay: delay, animationDuration: dur, rotate }}>
-      <div className="bg-white/10 border border-white/20 rounded-xl p-4" style={{ filter: 'blur(1.5px)' }}>
-        <p className="text-white/70 text-[12px] font-medium leading-snug mb-3">{q}</p>
-        <div className="flex gap-2">
+    <div className="absolute bg-element" style={{ ...style, animationDelay: delay, animationDuration: dur }}>
+      <div className="bg-white rounded-xl px-5 py-4" style={{ filter: 'blur(8px)', opacity: 0.55 }}>
+        <div className="h-4 w-3/4 bg-gray-400 rounded mb-1" />
+        <p className="text-[15px] text-gray-700 font-medium mb-4 leading-snug">{q}</p>
+        <div className="flex gap-3">
           {['Yes', 'No', 'N/A'].map(opt => (
-            <div key={opt} className="flex-1 py-1 text-[11px] text-center border border-white/25 rounded-lg text-white/50">{opt}</div>
+            <div key={opt} className="flex-1 py-2 text-[13px] font-medium text-center rounded-lg border border-gray-300 text-gray-600 bg-white">{opt}</div>
           ))}
         </div>
+        <div className="flex gap-4 mt-3">
+          {['Add note', 'Attach media', 'Create action'].map(a => (
+            <div key={a} className="text-[11px] text-gray-400">{a}</div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function BgTitle({ label, style, delay, dur }: { label: string; style: React.CSSProperties; delay: string; dur: string }) {
+  return (
+    <div className="absolute bg-element" style={{ ...style, animationDelay: delay, animationDuration: dur }}>
+      <div style={{ filter: 'blur(8px)', opacity: 0.45 }}>
+        <p className="text-[26px] font-bold text-white mb-2">{label}</p>
+        <div className="h-3 w-full bg-white/40 rounded mb-1.5" />
+        <div className="h-3 w-5/6 bg-white/30 rounded" />
       </div>
     </div>
   )
@@ -61,15 +78,16 @@ export default function SignUp() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden" style={{ backgroundColor: '#4A4D5E' }}>
+    <div className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden" style={{ backgroundColor: '#9CA3AF' }}>
 
-      {/* Drifting blurred question cards */}
+      {/* Background question cards — positioned from Figma metadata */}
       <div className="absolute inset-0 pointer-events-none">
-        {CARDS.map((c, i) => <DriftingCard key={i} {...c} />)}
+        {BG_ELEMENTS.map((el, i) =>
+          el.isTitle
+            ? <BgTitle key={i} label={el.label!} style={el.style} delay={el.delay} dur={el.dur} />
+            : <BgQuestion key={i} q={el.q!} style={el.style} delay={el.delay} dur={el.dur} />
+        )}
       </div>
-
-      {/* Overlay to keep cards subtle */}
-      <div className="absolute inset-0 pointer-events-none" style={{ backgroundColor: 'rgba(40,42,58,0.45)' }} />
 
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center w-full px-4">
@@ -174,19 +192,18 @@ export default function SignUp() {
       </div>
 
       <style>{`
-        @keyframes cardDrift {
-          0%   { translate: 0px 0px; }
-          25%  { translate: 12px -20px; }
-          50%  { translate: -8px -10px; }
-          75%  { translate: 8px -28px; }
-          100% { translate: 0px -14px; }
+        @keyframes bgDrift {
+          0%   { transform: translate(0px, 0px); }
+          33%  { transform: translate(6px, -14px); }
+          66%  { transform: translate(-5px, -8px); }
+          100% { transform: translate(4px, -18px); }
         }
-        .drift-card {
-          animation-name: cardDrift;
+        .bg-element {
+          animation-name: bgDrift;
           animation-timing-function: ease-in-out;
           animation-iteration-count: infinite;
           animation-direction: alternate;
-          will-change: translate;
+          will-change: transform;
         }
       `}</style>
     </div>
