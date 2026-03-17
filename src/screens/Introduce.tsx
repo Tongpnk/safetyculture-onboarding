@@ -127,50 +127,7 @@ function QrCard() {
         You can preview this checklist on your phone by scanning this QR code.
       </p>
       <div className="border rounded-lg overflow-hidden" style={{ borderColor: '#DBE0EB' }}>
-        <svg viewBox="0 0 120 120" width="120" height="120">
-          <rect width="120" height="120" fill="white"/>
-          <rect x="8" y="8" width="30" height="30" rx="2" fill="#1F2533"/>
-          <rect x="12" y="12" width="22" height="22" rx="1" fill="white"/>
-          <rect x="16" y="16" width="14" height="14" rx="1" fill="#1F2533"/>
-          <rect x="82" y="8" width="30" height="30" rx="2" fill="#1F2533"/>
-          <rect x="86" y="12" width="22" height="22" rx="1" fill="white"/>
-          <rect x="90" y="16" width="14" height="14" rx="1" fill="#1F2533"/>
-          <rect x="8" y="82" width="30" height="30" rx="2" fill="#1F2533"/>
-          <rect x="12" y="86" width="22" height="22" rx="1" fill="white"/>
-          <rect x="16" y="90" width="14" height="14" rx="1" fill="#1F2533"/>
-          <rect x="44" y="8" width="6" height="6" fill="#1F2533"/>
-          <rect x="54" y="8" width="6" height="6" fill="#1F2533"/>
-          <rect x="44" y="18" width="6" height="6" fill="#1F2533"/>
-          <rect x="64" y="8" width="6" height="6" fill="#1F2533"/>
-          <rect x="74" y="14" width="6" height="6" fill="#1F2533"/>
-          <rect x="8" y="44" width="6" height="6" fill="#1F2533"/>
-          <rect x="18" y="44" width="6" height="6" fill="#1F2533"/>
-          <rect x="8" y="54" width="6" height="6" fill="#1F2533"/>
-          <rect x="8" y="64" width="6" height="6" fill="#1F2533"/>
-          <rect x="18" y="64" width="6" height="6" fill="#1F2533"/>
-          <rect x="106" y="44" width="6" height="6" fill="#1F2533"/>
-          <rect x="96" y="54" width="6" height="6" fill="#1F2533"/>
-          <rect x="106" y="54" width="6" height="6" fill="#1F2533"/>
-          <rect x="106" y="64" width="6" height="6" fill="#1F2533"/>
-          <rect x="44" y="106" width="6" height="6" fill="#1F2533"/>
-          <rect x="54" y="96" width="6" height="6" fill="#1F2533"/>
-          <rect x="64" y="106" width="6" height="6" fill="#1F2533"/>
-          <rect x="74" y="96" width="6" height="6" fill="#1F2533"/>
-          <rect x="44" y="44" width="6" height="6" fill="#1F2533"/>
-          <rect x="54" y="54" width="6" height="6" fill="#1F2533"/>
-          <rect x="64" y="44" width="6" height="6" fill="#1F2533"/>
-          <rect x="74" y="54" width="6" height="6" fill="#1F2533"/>
-          <rect x="44" y="64" width="6" height="6" fill="#1F2533"/>
-          <rect x="64" y="64" width="6" height="6" fill="#1F2533"/>
-          <rect x="54" y="74" width="6" height="6" fill="#1F2533"/>
-          <rect x="74" y="74" width="6" height="6" fill="#1F2533"/>
-          <rect x="84" y="44" width="6" height="6" fill="#1F2533"/>
-          <rect x="84" y="64" width="6" height="6" fill="#1F2533"/>
-          <rect x="84" y="74" width="6" height="6" fill="#1F2533"/>
-          <rect x="84" y="84" width="6" height="6" fill="#1F2533"/>
-          <rect x="94" y="84" width="6" height="6" fill="#1F2533"/>
-          <rect x="44" y="84" width="6" height="6" fill="#1F2533"/>
-        </svg>
+        <img src="/assets/qr-code.png" alt="QR code" width="120" height="120" style={{ display: 'block' }} />
       </div>
     </div>
   )
@@ -283,7 +240,7 @@ export default function Introduce() {
   const [tab, setTab] = useState<'desktop' | 'mobile'>('desktop')
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#E9EDF6' }}>
+    <div className="h-screen flex flex-col overflow-hidden" style={{ backgroundColor: '#E9EDF6' }}>
 
       {/* ── Top bar ──────────────────────────────────────────────────────── */}
       <div className="flex items-center h-14 px-5 bg-white border-b flex-shrink-0" style={{ borderBottomColor: '#DBE0EB' }}>
