@@ -87,9 +87,9 @@ const wait = (ms: number) => new Promise<void>(res => setTimeout(res, ms))
 function Tag({ label, selected }: { label: string; selected: boolean }) {
   return (
     <span
-      className="inline-flex items-center px-3 py-1 rounded-lg text-[12px] font-medium border mr-2 flex-shrink-0 whitespace-nowrap"
+      className="inline-flex items-center px-3 py-1 rounded-lg text-[14px] font-medium border mr-2 flex-shrink-0 whitespace-nowrap"
       style={selected
-        ? { borderColor: '#6559FF', color: '#4740D4', backgroundColor: 'white' }
+        ? { borderColor: '#675DF4', color: '#1F2533', backgroundColor: 'white' }
         : { borderColor: '#BFC6D4', color: '#545F70', backgroundColor: 'white' }}
     >
       {label}
