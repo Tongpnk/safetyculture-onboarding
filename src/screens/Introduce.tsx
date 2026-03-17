@@ -181,12 +181,11 @@ function QrCard() {
 function SideSheet() {
   return (
     <div
-      className="flex-shrink-0 flex flex-col gap-2 p-3 rounded-xl"
+      className="flex-shrink-0 flex flex-col gap-2 p-3"
       style={{
-        width: '420px',
+        width: '500px',
         backgroundColor: '#E9EDF6',
-        boxShadow: '0px 4px 12px rgba(0,0,0,0.12), 0px 2px 2px rgba(0,0,0,0.06)',
-        height: 'calc(100vh - 56px)',
+        boxShadow: '-4px 0px 12px rgba(0,0,0,0.06)',
       }}
     >
       {/* Header */}
@@ -340,10 +339,10 @@ export default function Introduce() {
       </div>
 
       {/* ── Content ──────────────────────────────────────────────────────── */}
-      <div className="flex flex-1 overflow-hidden gap-3 p-4">
+      <div className="flex flex-1 overflow-hidden">
 
         {/* Preview area */}
-        <div className="flex-1 overflow-hidden relative">
+        <div className="flex-1 overflow-hidden p-4 relative">
 
           {/* ── Desktop preview ── */}
           {tab === 'desktop' && (
@@ -369,7 +368,7 @@ export default function Introduce() {
                 <QrCard />
               </div>
 
-              {/* Phone frame — centred horizontally and vertically */}
+              {/* Phone frame — centred */}
               <div
                 className="flex-shrink-0 overflow-hidden"
                 style={{
