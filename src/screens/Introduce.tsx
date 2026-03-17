@@ -6,10 +6,15 @@ import { Paperclip, Mic, Monitor, Smartphone } from 'lucide-react'
 
 const QUESTIONS = [
   'Is the equipment operating without unusual noise or vibration?',
-  'Are all safety guards and protective covers properly installed?',
-  'Are emergency stop buttons accessible and functioning correctly?',
-  'Are there any visible signs of wear, leaks, or damage?',
-  'Is routine maintenance up to date for all equipment?',
+  'Is the equipment operating within normal temperature ranges?',
+  '• Are there any unusual smells (e.g. burning, overheating)?',
+  'Is the equipment running at expected speed/output levels?',
+  'Are safety interlocks functioning as intended?',
+  'Are warning labels and safety signage clearly visible?',
+  'Are there any loose components or fittings?',
+  'Are hoses, belts, or cables showing signs of wear or fraying?',
+  'Are maintenance logs up to date and accessible?',
+  'Are required spare parts or consumables available on-site?',
 ]
 
 // ─── Sub-action icons ─────────────────────────────────────────────────────────
@@ -107,6 +112,70 @@ function QuestionCard({ q, mobile = false }: { q: string; mobile?: boolean }) {
   )
 }
 
+// ─── QR Code card ─────────────────────────────────────────────────────────────
+
+function QrCard() {
+  return (
+    <div
+      className="bg-white rounded-xl p-3 flex flex-col gap-3 items-center"
+      style={{
+        width: '148px',
+        boxShadow: '0px 4px 12px rgba(0,0,0,0.08), 0px 2px 2px rgba(0,0,0,0.04)',
+      }}
+    >
+      <p className="text-[13px] text-[#3F495A] leading-5 self-start">
+        You can preview this checklist on your phone by scanning this QR code.
+      </p>
+      <div className="border rounded-lg overflow-hidden" style={{ borderColor: '#DBE0EB' }}>
+        <svg viewBox="0 0 120 120" width="120" height="120">
+          <rect width="120" height="120" fill="white"/>
+          <rect x="8" y="8" width="30" height="30" rx="2" fill="#1F2533"/>
+          <rect x="12" y="12" width="22" height="22" rx="1" fill="white"/>
+          <rect x="16" y="16" width="14" height="14" rx="1" fill="#1F2533"/>
+          <rect x="82" y="8" width="30" height="30" rx="2" fill="#1F2533"/>
+          <rect x="86" y="12" width="22" height="22" rx="1" fill="white"/>
+          <rect x="90" y="16" width="14" height="14" rx="1" fill="#1F2533"/>
+          <rect x="8" y="82" width="30" height="30" rx="2" fill="#1F2533"/>
+          <rect x="12" y="86" width="22" height="22" rx="1" fill="white"/>
+          <rect x="16" y="90" width="14" height="14" rx="1" fill="#1F2533"/>
+          <rect x="44" y="8" width="6" height="6" fill="#1F2533"/>
+          <rect x="54" y="8" width="6" height="6" fill="#1F2533"/>
+          <rect x="44" y="18" width="6" height="6" fill="#1F2533"/>
+          <rect x="64" y="8" width="6" height="6" fill="#1F2533"/>
+          <rect x="74" y="14" width="6" height="6" fill="#1F2533"/>
+          <rect x="8" y="44" width="6" height="6" fill="#1F2533"/>
+          <rect x="18" y="44" width="6" height="6" fill="#1F2533"/>
+          <rect x="8" y="54" width="6" height="6" fill="#1F2533"/>
+          <rect x="8" y="64" width="6" height="6" fill="#1F2533"/>
+          <rect x="18" y="64" width="6" height="6" fill="#1F2533"/>
+          <rect x="106" y="44" width="6" height="6" fill="#1F2533"/>
+          <rect x="96" y="54" width="6" height="6" fill="#1F2533"/>
+          <rect x="106" y="54" width="6" height="6" fill="#1F2533"/>
+          <rect x="106" y="64" width="6" height="6" fill="#1F2533"/>
+          <rect x="44" y="106" width="6" height="6" fill="#1F2533"/>
+          <rect x="54" y="96" width="6" height="6" fill="#1F2533"/>
+          <rect x="64" y="106" width="6" height="6" fill="#1F2533"/>
+          <rect x="74" y="96" width="6" height="6" fill="#1F2533"/>
+          <rect x="44" y="44" width="6" height="6" fill="#1F2533"/>
+          <rect x="54" y="54" width="6" height="6" fill="#1F2533"/>
+          <rect x="64" y="44" width="6" height="6" fill="#1F2533"/>
+          <rect x="74" y="54" width="6" height="6" fill="#1F2533"/>
+          <rect x="44" y="64" width="6" height="6" fill="#1F2533"/>
+          <rect x="64" y="64" width="6" height="6" fill="#1F2533"/>
+          <rect x="54" y="74" width="6" height="6" fill="#1F2533"/>
+          <rect x="74" y="74" width="6" height="6" fill="#1F2533"/>
+          <rect x="84" y="44" width="6" height="6" fill="#1F2533"/>
+          <rect x="84" y="64" width="6" height="6" fill="#1F2533"/>
+          <rect x="84" y="74" width="6" height="6" fill="#1F2533"/>
+          <rect x="84" y="84" width="6" height="6" fill="#1F2533"/>
+          <rect x="94" y="84" width="6" height="6" fill="#1F2533"/>
+          <rect x="44" y="84" width="6" height="6" fill="#1F2533"/>
+        </svg>
+      </div>
+    </div>
+  )
+}
+
 // ─── AI Side sheet ─────────────────────────────────────────────────────────────
 
 function SideSheet() {
@@ -128,7 +197,6 @@ function SideSheet() {
 
       {/* Chat area */}
       <div className="flex-1 min-h-0 bg-white rounded-xl p-3 overflow-y-auto scrollbar-hide flex flex-col gap-4">
-        {/* AI message */}
         <div className="text-[14px] text-[#1F2533] leading-5 flex flex-col gap-0 px-1">
           <p>
             I've created your first <strong>Equipment Performance Checklist</strong> based on leading organisations in your industry.
@@ -159,7 +227,6 @@ function SideSheet() {
           </p>
         </div>
 
-        {/* What's next */}
         <div className="flex flex-col gap-3 px-1">
           <p className="text-[16px] font-semibold text-[#1F2533]">What's next</p>
           <div className="flex gap-3 items-start p-3 rounded-xl border" style={{ borderColor: '#DBE0EB' }}>
@@ -221,7 +288,6 @@ export default function Introduce() {
 
       {/* ── Top bar ──────────────────────────────────────────────────────── */}
       <div className="flex items-center h-14 px-5 bg-white border-b flex-shrink-0" style={{ borderBottomColor: '#DBE0EB' }}>
-        {/* Cancel */}
         <button
           onClick={() => navigate('/plan')}
           className="border rounded-lg px-4 py-2 text-[14px] font-medium text-[#1F2533] hover:bg-gray-50 transition-colors"
@@ -230,7 +296,6 @@ export default function Introduce() {
           Cancel
         </button>
 
-        {/* Tabs */}
         <div className="flex items-center ml-4">
           {[
             { key: 'desktop', label: 'Desktop preview', Icon: Monitor },
@@ -255,7 +320,6 @@ export default function Introduce() {
           })}
         </div>
 
-        {/* Edit + Save */}
         <div className="ml-auto flex items-center gap-2">
           <button
             className="border rounded-lg px-4 py-2 text-[14px] font-medium text-[#1F2533] hover:bg-gray-50 transition-colors"
@@ -279,110 +343,52 @@ export default function Introduce() {
       <div className="flex flex-1 overflow-hidden gap-3 p-4">
 
         {/* Preview area */}
-        <div className="flex-1 overflow-y-auto scrollbar-hide">
+        <div className="flex-1 overflow-hidden relative">
 
           {/* ── Desktop preview ── */}
           {tab === 'desktop' && (
-            <div className="flex justify-center">
-              <div className="flex flex-col gap-2 w-full" style={{ maxWidth: '780px' }}>
-                <ChecklistTitle />
-                {QUESTIONS.map((q, i) => (
-                  <div key={i} className="overflow-hidden" style={{ borderRadius: '2px', border: '1px solid #E9EDF6' }}>
-                    <QuestionCard q={q} mobile={false} />
-                  </div>
-                ))}
+            <div className="h-full overflow-y-auto scrollbar-hide">
+              <div className="flex justify-center">
+                <div className="flex flex-col gap-2 w-full" style={{ maxWidth: '780px' }}>
+                  <ChecklistTitle />
+                  {QUESTIONS.map((q, i) => (
+                    <div key={i} className="overflow-hidden" style={{ borderRadius: '2px', border: '1px solid #E9EDF6' }}>
+                      <QuestionCard q={q} mobile={false} />
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           )}
 
           {/* ── Mobile preview ── */}
           {tab === 'mobile' && (
-            <div className="flex justify-center">
-              <div className="flex gap-4 items-start">
-                {/* QR Code card */}
-                <div
-                  className="flex-shrink-0 bg-white rounded-xl p-3 flex flex-col gap-3 items-center"
-                  style={{
-                    width: '148px',
-                    boxShadow: '0px 4px 12px rgba(0,0,0,0.08), 0px 2px 2px rgba(0,0,0,0.04)',
-                  }}
-                >
-                  <p className="text-[13px] text-[#3F495A] leading-5 self-start">
-                    You can preview this checklist on your phone by scanning this QR code.
-                  </p>
-                  {/* QR code SVG */}
-                  <div className="border rounded-lg overflow-hidden" style={{ borderColor: '#DBE0EB' }}>
-                    <svg viewBox="0 0 120 120" width="120" height="120">
-                      <rect width="120" height="120" fill="white"/>
-                      {/* Top-left finder */}
-                      <rect x="8" y="8" width="30" height="30" rx="2" fill="#1F2533"/>
-                      <rect x="12" y="12" width="22" height="22" rx="1" fill="white"/>
-                      <rect x="16" y="16" width="14" height="14" rx="1" fill="#1F2533"/>
-                      {/* Top-right finder */}
-                      <rect x="82" y="8" width="30" height="30" rx="2" fill="#1F2533"/>
-                      <rect x="86" y="12" width="22" height="22" rx="1" fill="white"/>
-                      <rect x="90" y="16" width="14" height="14" rx="1" fill="#1F2533"/>
-                      {/* Bottom-left finder */}
-                      <rect x="8" y="82" width="30" height="30" rx="2" fill="#1F2533"/>
-                      <rect x="12" y="86" width="22" height="22" rx="1" fill="white"/>
-                      <rect x="16" y="90" width="14" height="14" rx="1" fill="#1F2533"/>
-                      {/* Data modules */}
-                      <rect x="44" y="8" width="6" height="6" fill="#1F2533"/>
-                      <rect x="54" y="8" width="6" height="6" fill="#1F2533"/>
-                      <rect x="44" y="18" width="6" height="6" fill="#1F2533"/>
-                      <rect x="64" y="8" width="6" height="6" fill="#1F2533"/>
-                      <rect x="74" y="14" width="6" height="6" fill="#1F2533"/>
-                      <rect x="8" y="44" width="6" height="6" fill="#1F2533"/>
-                      <rect x="18" y="44" width="6" height="6" fill="#1F2533"/>
-                      <rect x="8" y="54" width="6" height="6" fill="#1F2533"/>
-                      <rect x="8" y="64" width="6" height="6" fill="#1F2533"/>
-                      <rect x="18" y="64" width="6" height="6" fill="#1F2533"/>
-                      <rect x="106" y="44" width="6" height="6" fill="#1F2533"/>
-                      <rect x="96" y="54" width="6" height="6" fill="#1F2533"/>
-                      <rect x="106" y="54" width="6" height="6" fill="#1F2533"/>
-                      <rect x="106" y="64" width="6" height="6" fill="#1F2533"/>
-                      <rect x="44" y="106" width="6" height="6" fill="#1F2533"/>
-                      <rect x="54" y="96" width="6" height="6" fill="#1F2533"/>
-                      <rect x="64" y="106" width="6" height="6" fill="#1F2533"/>
-                      <rect x="74" y="96" width="6" height="6" fill="#1F2533"/>
-                      <rect x="44" y="44" width="6" height="6" fill="#1F2533"/>
-                      <rect x="54" y="54" width="6" height="6" fill="#1F2533"/>
-                      <rect x="64" y="44" width="6" height="6" fill="#1F2533"/>
-                      <rect x="74" y="54" width="6" height="6" fill="#1F2533"/>
-                      <rect x="44" y="64" width="6" height="6" fill="#1F2533"/>
-                      <rect x="64" y="64" width="6" height="6" fill="#1F2533"/>
-                      <rect x="54" y="74" width="6" height="6" fill="#1F2533"/>
-                      <rect x="74" y="74" width="6" height="6" fill="#1F2533"/>
-                      <rect x="84" y="44" width="6" height="6" fill="#1F2533"/>
-                      <rect x="84" y="64" width="6" height="6" fill="#1F2533"/>
-                      <rect x="84" y="74" width="6" height="6" fill="#1F2533"/>
-                      <rect x="84" y="84" width="6" height="6" fill="#1F2533"/>
-                      <rect x="94" y="84" width="6" height="6" fill="#1F2533"/>
-                      <rect x="44" y="84" width="6" height="6" fill="#1F2533"/>
-                    </svg>
-                  </div>
-                </div>
+            <div className="h-full flex items-center justify-center">
+              {/* QR card — fixed to top-left of preview area */}
+              <div className="absolute top-0 left-0 z-10">
+                <QrCard />
+              </div>
 
-                {/* Phone frame */}
-                <div
-                  className="flex-shrink-0 overflow-hidden bg-white"
-                  style={{
-                    width: '375px',
-                    height: '720px',
-                    borderRadius: '24px',
-                    border: '1px solid #DBE0EB',
-                    backgroundColor: '#E9EDF6',
-                  }}
-                >
-                  <div className="h-full overflow-y-auto scrollbar-hide">
-                    <div className="flex flex-col gap-2 p-2">
-                      <ChecklistTitle />
-                      {QUESTIONS.map((q, i) => (
-                        <div key={i} className="overflow-hidden bg-white" style={{ borderRadius: '2px' }}>
-                          <QuestionCard q={q} mobile={true} />
-                        </div>
-                      ))}
-                    </div>
+              {/* Phone frame — centred horizontally and vertically */}
+              <div
+                className="flex-shrink-0 overflow-hidden"
+                style={{
+                  width: '375px',
+                  height: '720px',
+                  borderRadius: '24px',
+                  border: '12px solid white',
+                  backgroundColor: '#E9EDF6',
+                  boxShadow: '0px 8px 16px rgba(0,0,0,0.12), 0px 2px 4px rgba(0,0,0,0.06)',
+                }}
+              >
+                <div className="h-full overflow-y-auto scrollbar-hide">
+                  <div className="flex flex-col gap-2 p-2">
+                    <ChecklistTitle />
+                    {QUESTIONS.map((q, i) => (
+                      <div key={i} className="overflow-hidden bg-white" style={{ borderRadius: '2px' }}>
+                        <QuestionCard q={q} mobile={true} />
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
