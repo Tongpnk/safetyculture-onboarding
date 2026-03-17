@@ -5,6 +5,7 @@ import Start from './screens/Start'
 import Plan from './screens/Plan'
 import Introduce from './screens/Introduce'
 import HomeEmpty from './screens/HomeEmpty'
+import HomeDemo from './screens/HomeDemo'
 
 export default function App() {
   return (
@@ -16,7 +17,7 @@ export default function App() {
         <Route path="/plan" element={<Plan />} />
         <Route path="/introduce" element={<Introduce />} />
         <Route path="/home" element={<HomeEmpty />} />
-        <Route path="/workspace" element={<Navigate to="/home" replace />} />
+        <Route path="/workspace" element={<HomeDemo />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
