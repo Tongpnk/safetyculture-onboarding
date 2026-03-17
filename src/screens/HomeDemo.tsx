@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import {
   Home, FileText, CheckSquare, FolderOpen, BookOpen, File, Zap,
   MapPin, Package, Users, MoreHorizontal, Search, HelpCircle, Bell,
-  ChevronDown, Mic, Paperclip, Star, X,
+  ChevronDown, Mic, Paperclip, X,
 } from 'lucide-react'
 
 // ─── Nav data ──────────────────────────────────────────────────────────────────
@@ -328,6 +328,7 @@ export default function HomeDemo() {
             className="bg-white rounded-2xl p-4 flex items-center gap-3 border-2"
             style={{ borderColor: '#564BE7' }}
           >
+            {/* Sparkle thumbnail */}
             <div
               className="flex-shrink-0 flex items-center justify-center rounded-xl"
               style={{ width: '48px', height: '48px', backgroundColor: '#675DF4' }}
@@ -384,6 +385,7 @@ export default function HomeDemo() {
 
           {/* Stats card */}
           <div className="bg-white rounded-2xl p-4 flex flex-col gap-4">
+            {/* Period tabs + View all */}
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 {(['today', '7d', '30d'] as const).map((t) => {
@@ -408,6 +410,7 @@ export default function HomeDemo() {
               <button className="text-[14px] font-medium" style={{ color: '#4740D4' }}>View all</button>
             </div>
 
+            {/* 3 stat cards */}
             <div className="flex gap-4">
               <StatCard
                 icon={<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1.5" y="1.5" width="13" height="13" rx="2.5" stroke="#3F495A" strokeWidth="1.5"/><path d="M4 8L6.5 10.5L12 5" stroke="#3F495A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>}
@@ -449,6 +452,7 @@ export default function HomeDemo() {
               </button>
             </div>
 
+            {/* Filter chips */}
             <div className="flex items-center gap-2 flex-wrap">
               <FilterChip
                 active
@@ -485,6 +489,7 @@ export default function HomeDemo() {
               />
             </div>
 
+            {/* Task rows */}
             <div className="flex flex-col gap-2">
               <div className="flex items-center justify-between py-3 px-3 border-b" style={{ borderColor: '#E9EDF6' }}>
                 <div className="flex items-center gap-1.5">
@@ -523,18 +528,23 @@ export default function HomeDemo() {
             boxShadow: '-4px 0px 12px rgba(0,0,0,0.06)',
           }}
         >
+          {/* Header */}
           <div className="flex items-center gap-2 flex-shrink-0 px-1 pt-1">
             <SparkleIcon />
             <span className="text-[14px] font-semibold text-[#4740D4]">AI Assistant</span>
           </div>
 
+          {/* Chat area */}
           <div className="flex-1 min-h-0 bg-white rounded-xl p-3 overflow-y-auto scrollbar-hide flex flex-col gap-4">
-            <div className="text-[14px] text-[#1F2533] leading-5 flex flex-col gap-0 px-1">
-              <p>This is the preview for your space once data has been collected. As you can see here you can view get insights about your business, a snapshot of key metrics that you&#39;ve set up as well as an overview of your SafetyCulture rating.</p>
+            {/* Message */}
+            <div className="text-[14px] text-[#1F2533] leading-5 flex flex-col gap-3 px-1">
+              <p>This is a preview of your workspace once data starts coming in.</p>
+              <p>You'll be able to see insights about your business, key metrics at a glance, and an overview of your SafetyCulture rating.</p>
             </div>
 
+            {/* What's next */}
             <div className="flex flex-col gap-2 px-1">
-              <p className="text-[16px] font-semibold text-[#1F2533]">What&#39;s next</p>
+              <p className="text-[16px] font-semibold text-[#1F2533]">What's next</p>
 
               <button
                 className="flex gap-2 items-start p-2 rounded-xl border w-full text-left hover:bg-gray-50 transition-colors"
@@ -542,9 +552,9 @@ export default function HomeDemo() {
               >
                 <div
                   className="flex-shrink-0 flex items-center justify-center rounded-lg"
-                  style={{ width: '36px', height: '36px', backgroundColor: '#F1F3FB' }}
+                  style={{ width: '36px', height: '36px', backgroundColor: '#675DF4' }}
                 >
-                  <Star size={18} stroke="#545F70" strokeWidth={1.5} fill="none" />
+                  <SparkleIcon size={18} />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-[14px] font-semibold text-[#1F2533] leading-5">Review the 5 star SafetyCulture rating</p>
@@ -554,6 +564,7 @@ export default function HomeDemo() {
             </div>
           </div>
 
+          {/* Input */}
           <div className="flex-shrink-0 border rounded-xl overflow-hidden bg-white" style={{ borderColor: '#DBE0EB' }}>
             <div className="flex items-center gap-2 px-2 pt-2 pb-0">
               <button
