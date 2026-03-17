@@ -16,6 +16,7 @@ export default function App() {
         <Route path="/plan" element={<Plan />} />
         <Route path="/introduce" element={<Introduce />} />
         <Route path="/home" element={<HomeEmpty />} />
+        <Route path="/workspace" element={<Navigate to="/home" replace />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
