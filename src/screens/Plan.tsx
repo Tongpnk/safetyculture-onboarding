@@ -60,7 +60,7 @@ const ITEMS: ConvItem[] = [
   { type: 'ai',   text: 'What industry are you in?' },
   { type: 'user-text', text: 'Manufacturing' },
   { type: 'ai',   text: 'Which manufacturing standards are the most important to you?' },
-  { type: 'user-tags', tags: ['Occupational Safety and Health Administration (OSHA)', 'Safe Work', 'ISO 45001'], selected: [0] },
+  { type: 'user-tags', tags: ['ISO 9001', 'Safe Work Australia', 'Occupational Health and Safety'], selected: [0] },
   { type: 'ai',   text: 'What equipment are you looking to do maintenance checks on?' },
   { type: 'user-tags', tags: ['CNC Router', 'Water Jet Cutter', 'SLA 3D Printer', 'Hydraulic Press'], selected: [0, 1, 2, 3] },
 ]
@@ -87,7 +87,7 @@ const wait = (ms: number) => new Promise<void>(res => setTimeout(res, ms))
 function Tag({ label, selected }: { label: string; selected: boolean }) {
   return (
     <span
-      className="inline-flex items-center px-3 py-1 rounded-full text-[12px] font-medium border mr-2 mb-1 whitespace-nowrap"
+      className="inline-flex items-center px-3 py-1 rounded-lg text-[12px] font-medium border mr-2 flex-shrink-0 whitespace-nowrap"
       style={selected
         ? { borderColor: '#6559FF', color: '#4740D4', backgroundColor: 'white' }
         : { borderColor: '#BFC6D4', color: '#545F70', backgroundColor: 'white' }}
@@ -101,15 +101,15 @@ function Tag({ label, selected }: { label: string; selected: boolean }) {
 
 export default function Plan() {
   const navigate = useNavigate()
-  const [shownItems, setShownItems]       = useState<number[]>([])
-  const [shownThinking, setShownThinking] = useState<number[]>([])
-  const [showReview, setShowReview]       = useState(false)
-  const [typingText, setTypingText]       = useState('')
-  const [inputActive, setInputActive]     = useState(false)
-  const scrollRef = useRef<HTMLDivElement>(null)
-  const cancelRef = useRef(false)
+  const [shownItems, setShownItems]           = useState<number[]>([])
+  const [shownThinking, setShownThinking]     = useState<number[]>([])
+  const [showReview, setShowReview]           = useState(false)
+  const [typingText, setTypingText]           = useState('')
+  const [inputActive, setInputActive]         = useState(false)
+  const scrollRef  = useRef<HTMLDivElement>(null)
+  const cancelRef  = useRef(false)
 
-  // Auto-scroll on any state change
+  // Auto-scroll whenever content changes
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight
@@ -138,30 +138,34 @@ export default function Plan() {
       }
       await wait(220)
     }
-    const clearInput = () => { setTypingText(''); setInputActive(false) }
+    const clearInput = () => {
+      setTypingText('')
+      setInputActive(false)
+    }
 
     async function run() {
-      await wait(400);  show(0)
-      await wait(700);  show(1)
+      await wait(400);  show(0)          // intro
+      await wait(700);  show(1)          // Q1
       await wait(500);  await typeInto('Megabites')
-      show(2); clearInput()
+      show(2); clearInput()              // A1
 
-      await wait(600);  show(3)
+      await wait(600);  show(3)          // Q2
       await wait(500);  await typeInto('Site manager')
-      show(4); clearInput()
+      show(4); clearInput()              // A2
 
-      await wait(600);  show(5)
+      await wait(600);  show(5)          // Q3
       await wait(500);  await typeInto('Manufacturing')
-      show(6); clearInput()
+      show(6); clearInput()              // A3
 
-      await wait(600);  show(7)
-      await wait(600);  show(8)
-      await wait(700);  show(9)
-      await wait(600);  show(10)
+      await wait(600);  show(7)          // Q4 (standards)
+      await wait(600);  show(8)          // standards tags
 
-      await wait(800);  showThink(0)
-      await wait(700);  showThink(1)
-      await wait(700);  showThink(2)
+      await wait(700);  show(9)          // Q5 (equipment)
+      await wait(600);  show(10)         // equipment tags
+
+      await wait(800);  showThink(0)     // thinking: building checklist
+      await wait(700);  showThink(1)     // thinking: adding assets
+      await wait(700);  showThink(2)     // thinking: Thinking...
       await wait(1800)
       if (!cancelRef.current) setShowReview(true)
     }
@@ -193,12 +197,12 @@ export default function Plan() {
         Skip for now
       </button>
 
-      {/* Modal — centered, 80vh height, flex column, fixed chat at bottom */}
+      {/* Modal — vertically + horizontally centered, 80vh height, fixed chat at bottom */}
       <div
         className="relative z-10 bg-white rounded-lg shadow-2xl flex flex-col mx-4 w-full"
         style={{ maxWidth: '529px', height: 'min(720px, 80vh)' }}
       >
-        {/* Scrollable conversation */}
+        {/* ── Scrollable conversation ─────────────────────────────────────── */}
         <div
           ref={scrollRef}
           className="flex-1 min-h-0 overflow-y-auto p-4 space-y-4 scrollbar-hide"
@@ -207,25 +211,32 @@ export default function Plan() {
             if (!shownItems.includes(i)) return null
             return (
               <div key={i} className="animate-fadeIn">
+
                 {item.type === 'intro' && (
                   <p className="text-[16px] text-[#545F70] leading-6">{item.text}</p>
                 )}
+
                 {item.type === 'ai' && (
                   <p className="text-[16px] text-[#545F70] leading-6">{item.text}</p>
                 )}
+
                 {item.type === 'user-text' && (
                   <div className="flex justify-end">
-                    <div className="px-3 py-2 rounded-lg text-[16px] text-white leading-6" style={{ backgroundColor: '#6559FF' }}>
+                    <div
+                      className="px-3 py-2 rounded-lg text-[16px] text-white leading-6"
+                      style={{ backgroundColor: '#6559FF' }}
+                    >
                       {item.text}
                     </div>
                   </div>
                 )}
+
                 {item.type === 'user-tags' && (
-                  <div className="flex flex-wrap overflow-hidden relative" style={{ maxHeight: '38px' }}>
+                  <div className="flex flex-nowrap overflow-hidden relative">
                     {item.tags.map((tag, j) => (
                       <Tag key={j} label={tag} selected={item.selected.includes(j)} />
                     ))}
-                    <div className="absolute right-0 top-0 h-full w-10 pointer-events-none"
+                    <div className="absolute right-0 top-0 h-full w-16 pointer-events-none flex-shrink-0"
                       style={{ background: 'linear-gradient(to right, transparent, white)' }} />
                   </div>
                 )}
@@ -303,14 +314,16 @@ export default function Plan() {
           )}
         </div>
 
-        {/* AI chat input — fixed to bottom, never scrolls */}
+        {/* ── AI chat input — fixed to bottom ─────────────────────────────── */}
         <div className="flex-shrink-0 p-3" style={{ borderTop: '1px solid #DBE0EB' }}>
           <div className="border rounded-xl overflow-hidden bg-white" style={{ borderColor: '#DBE0EB' }}>
+            {/* Setup tag */}
             <div className="flex items-center gap-2 px-2 pt-2 pb-0">
               <button className="inline-flex items-center gap-1 border rounded-lg px-2 py-1 text-[12px] font-medium text-[#4740D4] hover:bg-indigo-50 transition-colors" style={{ borderColor: '#DBE0EB' }}>
                 <span className="text-[11px]">@</span> Setup
               </button>
             </div>
+            {/* Textarea — shows typing animation */}
             <div className="px-3 py-2">
               <textarea
                 readOnly
@@ -321,6 +334,7 @@ export default function Plan() {
                 style={{ caretColor: inputActive ? '#675DF4' : 'transparent' }}
               />
             </div>
+            {/* Actions */}
             <div className="flex items-center justify-between px-2 pb-2">
               <button className="text-gray-400 hover:text-gray-600 p-1">
                 <Paperclip size={16} />
