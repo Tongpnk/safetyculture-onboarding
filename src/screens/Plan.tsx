@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Paperclip, Mic, ChevronDown } from 'lucide-react'
 
-// ─── Background (same as SignUp / Start) ────────────────────────────────────
+// ─── Background ──────────────────────────────────────────────────────────────
 
 const BG_ELEMENTS = [
   { label: 'Equipment performance', isTitle: true,
@@ -23,7 +23,7 @@ function BgQuestion({ q, style, delay, dur }: { q: string; style: React.CSSPrope
         <p className="text-[15px] text-gray-700 font-medium mb-4 leading-snug">{q}</p>
         <div className="flex gap-3">
           {['Yes', 'No', 'N/A'].map(opt => (
-            <div key={opt} className="flex-1 py-2 text-[13px] font-medium text-center rounded-lg border border-gray-300 text-gray-600 bg-white">{opt}</div>
+            <div key={opt} className="flex-1 py-2 text-[13px] text-center rounded-lg border border-gray-300 text-gray-600 bg-white">{opt}</div>
           ))}
         </div>
       </div>
@@ -43,58 +43,46 @@ function BgTitle({ label, style, delay, dur }: { label: string; style: React.CSS
   )
 }
 
-// ─── Conversation script ─────────────────────────────────────────────────────
+// ─── Conversation types ───────────────────────────────────────────────────────
 
 type ConvItem =
-  | { type: 'intro'; text: string; delay: number }
-  | { type: 'qa'; q: string; answer: string; delay: number }
-  | { type: 'qtags'; q: string; tags: string[]; selected: number[]; delay: number }
+  | { type: 'intro'; text: string }
+  | { type: 'ai'; text: string }
+  | { type: 'user-text'; text: string }
+  | { type: 'user-tags'; tags: string[]; selected: number[] }
 
-const SCRIPT: ConvItem[] = [
-  { type: 'intro', text: 'Helping you build out your Equipment Performance workflow.', delay: 300 },
-  { type: 'qa', q: 'First, what company do you work for?', answer: 'Megabites', delay: 900 },
-  { type: 'qa', q: 'What is your job title?', answer: 'Site manager', delay: 1600 },
-  { type: 'qa', q: 'What industry are you in?', answer: 'Manufacturing', delay: 2300 },
-  {
-    type: 'qtags',
-    q: 'Which manufacturing standards are the most important to you?',
-    tags: ['Occupational Safety and Health Administration (OSHA)', 'Safe Work', 'ISO 45001'],
-    selected: [0],
-    delay: 3100,
-  },
-  {
-    type: 'qtags',
-    q: 'What equipment are you looking to do maintenance checks on?',
-    tags: ['CNC Router', 'Water Jet Cutter', 'SLA 3D Printer', 'Hydraulic Press'],
-    selected: [0, 1, 2, 3],
-    delay: 4000,
-  },
+const ITEMS: ConvItem[] = [
+  { type: 'intro', text: 'Helping you build out your Equipment Performance workflow.' },
+  { type: 'ai',   text: 'First, what company do you work for?' },
+  { type: 'user-text', text: 'Megabites' },
+  { type: 'ai',   text: 'What is your job title?' },
+  { type: 'user-text', text: 'Site manager' },
+  { type: 'ai',   text: 'What industry are you in?' },
+  { type: 'user-text', text: 'Manufacturing' },
+  { type: 'ai',   text: 'Which manufacturing standards are the most important to you?' },
+  { type: 'user-tags', tags: ['Occupational Safety and Health Administration (OSHA)', 'Safe Work', 'ISO 45001'], selected: [0] },
+  { type: 'ai',   text: 'What equipment are you looking to do maintenance checks on?' },
+  { type: 'user-tags', tags: ['CNC Router', 'Water Jet Cutter', 'SLA 3D Printer', 'Hydraulic Press'], selected: [0, 1, 2, 3] },
 ]
 
 const THINKING_STEPS = [
-  { icon: 'dot', text: 'Building out your checklist based on ISO 9001', delay: 5000 },
-  { icon: 'wrench', text: 'Adding your assets', delay: 5700 },
-  { icon: 'dot-pulse', text: 'Thinking...', delay: 6400 },
+  { icon: 'dot',       text: 'Building out your checklist based on ISO 9001' },
+  { icon: 'wrench',    text: 'Adding your assets' },
+  { icon: 'dot-pulse', text: 'Thinking...' },
 ]
-
-const REVIEW_DELAY = 8200
 
 const REVIEW_STEPS = [
-  {
-    title: 'Adding your assets',
-    desc: 'Monitor equipment performance and catch issues early',
-  },
-  {
-    title: 'Standardise routine inspections across your team',
-    desc: 'Ensure every check is completed the same way with guided steps, photos, and clear pass/fail criteria.',
-  },
-  {
-    title: 'Log issues and trigger follow-up actions',
-    desc: 'Capture faults during inspections and automatically assign fixes to keep things running smoothly.',
-  },
+  { title: 'Adding your assets',
+    desc: 'Monitor equipment performance and catch issues early' },
+  { title: 'Standardise routine inspections across your team',
+    desc: 'Ensure every check is completed the same way with guided steps, photos, and clear pass/fail criteria.' },
+  { title: 'Log issues and trigger follow-up actions',
+    desc: 'Capture faults during inspections and automatically assign fixes to keep things running smoothly.' },
 ]
 
-// ─── Sub-components ──────────────────────────────────────────────────────────
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+const wait = (ms: number) => new Promise<void>(res => setTimeout(res, ms))
 
 function Tag({ label, selected }: { label: string; selected: boolean }) {
   return (
@@ -109,45 +97,81 @@ function Tag({ label, selected }: { label: string; selected: boolean }) {
   )
 }
 
-// ─── Main component ──────────────────────────────────────────────────────────
+// ─── Main component ───────────────────────────────────────────────────────────
 
 export default function Plan() {
   const navigate = useNavigate()
-  const [visibleItems, setVisibleItems] = useState<number[]>([])
-  const [visibleThinking, setVisibleThinking] = useState<number[]>([])
-  const [showReview, setShowReview] = useState(false)
+  const [shownItems, setShownItems]       = useState<number[]>([])
+  const [shownThinking, setShownThinking] = useState<number[]>([])
+  const [showReview, setShowReview]       = useState(false)
+  const [typingText, setTypingText]       = useState('')
+  const [inputActive, setInputActive]     = useState(false)
   const scrollRef = useRef<HTMLDivElement>(null)
+  const cancelRef = useRef(false)
 
-  useEffect(() => {
-    const timers: ReturnType<typeof setTimeout>[] = []
-
-    SCRIPT.forEach((item, i) => {
-      timers.push(setTimeout(() => {
-        setVisibleItems(prev => [...prev, i])
-      }, item.delay))
-    })
-
-    THINKING_STEPS.forEach((step, i) => {
-      timers.push(setTimeout(() => {
-        setVisibleThinking(prev => [...prev, i])
-      }, step.delay))
-    })
-
-    timers.push(setTimeout(() => setShowReview(true), REVIEW_DELAY))
-
-    return () => timers.forEach(clearTimeout)
-  }, [])
-
+  // Auto-scroll on any state change
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight
     }
-  }, [visibleItems, visibleThinking, showReview])
+  })
 
-  const showThinkingBlock = visibleThinking.length > 0
+  // Sequential animation chain
+  useEffect(() => {
+    cancelRef.current = false
+
+    const show = (idx: number) => {
+      if (cancelRef.current) return
+      setShownItems(prev => prev.includes(idx) ? prev : [...prev, idx])
+    }
+    const showThink = (idx: number) => {
+      if (cancelRef.current) return
+      setShownThinking(prev => prev.includes(idx) ? prev : [...prev, idx])
+    }
+    const typeInto = async (text: string) => {
+      if (cancelRef.current) return
+      setInputActive(true)
+      for (let i = 0; i <= text.length; i++) {
+        if (cancelRef.current) return
+        setTypingText(text.slice(0, i))
+        await wait(55)
+      }
+      await wait(220)
+    }
+    const clearInput = () => { setTypingText(''); setInputActive(false) }
+
+    async function run() {
+      await wait(400);  show(0)
+      await wait(700);  show(1)
+      await wait(500);  await typeInto('Megabites')
+      show(2); clearInput()
+
+      await wait(600);  show(3)
+      await wait(500);  await typeInto('Site manager')
+      show(4); clearInput()
+
+      await wait(600);  show(5)
+      await wait(500);  await typeInto('Manufacturing')
+      show(6); clearInput()
+
+      await wait(600);  show(7)
+      await wait(600);  show(8)
+      await wait(700);  show(9)
+      await wait(600);  show(10)
+
+      await wait(800);  showThink(0)
+      await wait(700);  showThink(1)
+      await wait(700);  showThink(2)
+      await wait(1800)
+      if (!cancelRef.current) setShowReview(true)
+    }
+
+    run()
+    return () => { cancelRef.current = true }
+  }, [])
 
   return (
-    <div className="relative min-h-screen flex justify-center overflow-hidden" style={{ backgroundColor: '#9CA3AF' }}>
+    <div className="relative min-h-screen flex items-center justify-center overflow-hidden" style={{ backgroundColor: '#9CA3AF' }}>
 
       {/* Drifting background */}
       <div className="absolute inset-0 pointer-events-none">
@@ -169,44 +193,40 @@ export default function Plan() {
         Skip for now
       </button>
 
-      {/* Modal panel */}
+      {/* Modal — centered, 80vh height, flex column, fixed chat at bottom */}
       <div
-        className="relative z-10 bg-white rounded-lg shadow-2xl flex flex-col mx-4 mt-6 mb-6"
-        style={{ width: '100%', maxWidth: '529px', maxHeight: 'calc(100vh - 48px)' }}
+        className="relative z-10 bg-white rounded-lg shadow-2xl flex flex-col mx-4 w-full"
+        style={{ maxWidth: '529px', height: 'min(720px, 80vh)' }}
       >
         {/* Scrollable conversation */}
-        <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-hide">
-
-          {SCRIPT.map((item, i) => {
-            if (!visibleItems.includes(i)) return null
+        <div
+          ref={scrollRef}
+          className="flex-1 min-h-0 overflow-y-auto p-4 space-y-4 scrollbar-hide"
+        >
+          {ITEMS.map((item, i) => {
+            if (!shownItems.includes(i)) return null
             return (
               <div key={i} className="animate-fadeIn">
                 {item.type === 'intro' && (
                   <p className="text-[16px] text-[#545F70] leading-6">{item.text}</p>
                 )}
-
-                {item.type === 'qa' && (
-                  <div className="flex flex-col gap-2 items-end w-full">
-                    <p className="text-[16px] text-[#545F70] leading-6 w-full">{item.q}</p>
-                    <div
-                      className="px-3 py-2 rounded-lg text-[16px] text-white leading-6"
-                      style={{ backgroundColor: '#6559FF' }}
-                    >
-                      {item.answer}
+                {item.type === 'ai' && (
+                  <p className="text-[16px] text-[#545F70] leading-6">{item.text}</p>
+                )}
+                {item.type === 'user-text' && (
+                  <div className="flex justify-end">
+                    <div className="px-3 py-2 rounded-lg text-[16px] text-white leading-6" style={{ backgroundColor: '#6559FF' }}>
+                      {item.text}
                     </div>
                   </div>
                 )}
-
-                {item.type === 'qtags' && (
-                  <div className="flex flex-col gap-2 w-full">
-                    <p className="text-[16px] text-[#545F70] leading-6">{item.q}</p>
-                    <div className="flex flex-wrap overflow-hidden relative" style={{ maxHeight: '38px' }}>
-                      {item.tags.map((tag, j) => (
-                        <Tag key={j} label={tag} selected={item.selected.includes(j)} />
-                      ))}
-                      <div className="absolute right-0 top-0 h-full w-10 pointer-events-none"
-                        style={{ background: 'linear-gradient(to right, transparent, white)' }} />
-                    </div>
+                {item.type === 'user-tags' && (
+                  <div className="flex flex-wrap overflow-hidden relative" style={{ maxHeight: '38px' }}>
+                    {item.tags.map((tag, j) => (
+                      <Tag key={j} label={tag} selected={item.selected.includes(j)} />
+                    ))}
+                    <div className="absolute right-0 top-0 h-full w-10 pointer-events-none"
+                      style={{ background: 'linear-gradient(to right, transparent, white)' }} />
                   </div>
                 )}
               </div>
@@ -214,14 +234,14 @@ export default function Plan() {
           })}
 
           {/* Thinking block */}
-          {showThinkingBlock && (
+          {shownThinking.length > 0 && (
             <div className="animate-fadeIn border rounded-xl overflow-hidden" style={{ borderColor: '#DBE0EB' }}>
               {THINKING_STEPS.map((step, i) => {
-                if (!visibleThinking.includes(i)) return null
+                if (!shownThinking.includes(i)) return null
                 const isDone = i < 2
                 return (
                   <div key={i} className="relative">
-                    {i < 2 && visibleThinking.includes(i + 1) && (
+                    {i < 2 && shownThinking.includes(i + 1) && (
                       <div className="absolute left-[13px] top-[26px] w-px bg-gray-200" style={{ height: '16px' }} />
                     )}
                     <div className="flex items-center gap-2 px-2 py-2">
@@ -230,18 +250,15 @@ export default function Plan() {
                           <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
                         </svg>
                       ) : step.icon === 'dot-pulse' ? (
-                        <div className="w-3 h-3 rounded-full border-2 border-indigo-400 animate-pulse flex-shrink-0" />
+                        <div className="w-3 h-3 rounded-full border-2 border-indigo-300 animate-pulse flex-shrink-0" />
                       ) : (
-                        <div className={`w-3 h-3 rounded-full flex-shrink-0 ${isDone ? 'bg-gray-300' : 'bg-indigo-400 animate-pulse'}`} />
+                        <div className="w-3 h-3 rounded-full bg-gray-300 flex-shrink-0" />
                       )}
-                      {step.icon === 'dot-pulse' ? (
-                        <span className="text-[12px] thinking-shimmer">{step.text}</span>
-                      ) : (
-                        <span className="flex-1 text-[12px] text-[#3F495A]">{step.text}</span>
-                      )}
-                      {isDone && (
-                        <ChevronDown size={12} className="text-gray-300 flex-shrink-0" />
-                      )}
+                      {step.icon === 'dot-pulse'
+                        ? <span className="text-[12px] thinking-shimmer">{step.text}</span>
+                        : <span className="flex-1 text-[12px] text-[#3F495A]">{step.text}</span>
+                      }
+                      {isDone && <ChevronDown size={12} className="text-gray-300 flex-shrink-0" />}
                     </div>
                   </div>
                 )
@@ -253,14 +270,13 @@ export default function Plan() {
           {showReview && (
             <div className="animate-fadeIn border rounded-xl p-4 flex flex-col gap-4" style={{ borderColor: '#BFC6D4' }}>
               <p className="text-[14px] font-semibold text-[#1F2533]">Equipment performance</p>
-
               <div className="flex flex-col gap-4">
                 {REVIEW_STEPS.map((step, i) => (
                   <div key={i} className="flex gap-2 items-start">
                     <div className="flex flex-col items-center pt-0.5 w-2 flex-shrink-0">
                       <div className="w-2 h-2 rounded-full bg-gray-300 flex-shrink-0" />
                       {i < REVIEW_STEPS.length - 1 && (
-                        <div className="w-px flex-1 bg-gray-200 mt-1" style={{ minHeight: '28px' }} />
+                        <div className="w-px bg-gray-200 mt-1" style={{ minHeight: '28px' }} />
                       )}
                     </div>
                     <div className="flex flex-col min-w-0">
@@ -270,7 +286,6 @@ export default function Plan() {
                   </div>
                 ))}
               </div>
-
               <button
                 onClick={() => navigate('/introduce')}
                 className="inline-flex items-center gap-1.5 text-[13px] text-white font-semibold px-4 py-2 rounded-lg transition-colors self-start"
@@ -288,20 +303,22 @@ export default function Plan() {
           )}
         </div>
 
-        {/* AI chat input — always visible at bottom */}
-        <div className="border-t p-3 flex-shrink-0" style={{ borderColor: '#DBE0EB' }}>
+        {/* AI chat input — fixed to bottom, never scrolls */}
+        <div className="flex-shrink-0 p-3" style={{ borderTop: '1px solid #DBE0EB' }}>
           <div className="border rounded-xl overflow-hidden bg-white" style={{ borderColor: '#DBE0EB' }}>
-            <div className="flex items-center gap-2 px-2 pt-2 pb-1">
+            <div className="flex items-center gap-2 px-2 pt-2 pb-0">
               <button className="inline-flex items-center gap-1 border rounded-lg px-2 py-1 text-[12px] font-medium text-[#4740D4] hover:bg-indigo-50 transition-colors" style={{ borderColor: '#DBE0EB' }}>
-                <span className="text-[11px]">@</span>
-                Setup
+                <span className="text-[11px]">@</span> Setup
               </button>
             </div>
-            <div className="px-3 py-1">
+            <div className="px-3 py-2">
               <textarea
+                readOnly
                 rows={2}
-                className="w-full resize-none bg-transparent text-[14px] text-gray-400 placeholder-gray-400 outline-none"
+                value={typingText}
+                className="w-full resize-none bg-transparent text-[14px] text-[#1F2533] placeholder-[#BFC6D4] outline-none"
                 placeholder="Ask a question in any supported language"
+                style={{ caretColor: inputActive ? '#675DF4' : 'transparent' }}
               />
             </div>
             <div className="flex items-center justify-between px-2 pb-2">
@@ -343,12 +360,10 @@ export default function Plan() {
           will-change: transform;
         }
         @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(8px); }
+          from { opacity: 0; transform: translateY(6px); }
           to   { opacity: 1; transform: translateY(0); }
         }
-        .animate-fadeIn {
-          animation: fadeIn 0.35s ease-out forwards;
-        }
+        .animate-fadeIn { animation: fadeIn 0.3s ease-out forwards; }
         @keyframes shimmer {
           0%   { background-position: -200% center; }
           100% { background-position: 200% center; }
