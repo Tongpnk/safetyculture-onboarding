@@ -221,11 +221,11 @@ export default function Plan() {
               <div key={i} className="animate-fadeIn">
 
                 {item.type === 'intro' && (
-                  <p className="text-[16px] text-[#545F70] leading-6">{item.text}</p>
+                  <p className="text-[14px] text-[#545F70] leading-5">{item.text}</p>
                 )}
 
                 {item.type === 'ai' && (
-                  <p className="text-[16px] text-[#545F70] leading-6">{item.text}</p>
+                  <p className="text-[14px] text-[#545F70] leading-5">{item.text}</p>
                 )}
 
                 {item.type === 'user-text' && (
