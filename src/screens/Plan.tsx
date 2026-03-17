@@ -231,7 +231,7 @@ export default function Plan() {
                 {item.type === 'user-text' && (
                   <div className="flex justify-end">
                     <div
-                      className="px-3 py-2 rounded-lg text-[16px] text-white leading-6"
+                      className="px-3 py-2 rounded-lg text-[14px] text-white leading-5"
                       style={{ backgroundColor: '#6559FF' }}
                     >
                       {item.text}
